@@ -1,0 +1,25 @@
+<resources>
+    <string name="app_name">Test412</string>
+
+    <string name="menu_salir">Salir</string>
+
+    <string name="label_home">Home</string>
+    <string name="label_bus">Buscador</string>
+    <string name="label_mto">Mantenimiento</string>
+
+    <string name="txt_appbar">Gestión Alumnos</string>
+    <string name="txt_salir">¿Desea cerrar al App?</string>
+    <string name="txt_mto_dni">DNI</string>
+    <string name="txt_mto_nombre">Nombre</string>
+    <string name="txt_titulo">Título:</string>
+    <string name="txt_titulo_smr">SMR</string>
+    <string name="txt_titulo_dam">DAM</string>
+
+    <string name="but_cancelar">Cancelar</string>
+    <string name="but_aceptar">Aceptar</string>
+
+    <string name="msg_alta_ok">Alta correcta</string>
+    <string name="msg_alta_ko">Alta incorrecta!!</string>
+    <string name="msg_baja_ok">Baja correcta</string>
+    <string name="msg_baja_ko">Baja incorrecta!!</string>
+</resources>
