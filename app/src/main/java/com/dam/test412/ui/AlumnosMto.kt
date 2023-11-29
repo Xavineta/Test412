@@ -106,29 +106,30 @@ fun AlumnosMto(
                     onClick = { alumnosVM.setTitulo(Titulo.DAM) })
                 Text(text = stringResource(R.string.txt_titulo_dam))
             }
-            AlumnoMtoAcciones(onClickDelete = {
-                val ok = alumnosVM.baja()
-                if (ok) alumnosVM.resetDatos()
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        context.getString(if (ok) R.string.msg_baja_ok else R.string.msg_baja_ko)
-                    )
-                }
-            }, onClickAdd = {
-                val ok = alumnosVM.alta()
-                if (ok) alumnosVM.resetDatos()
-                scope.launch {
-                    snackbarHostState.showSnackbar(
-                        context.getString(if (ok) R.string.msg_alta_ok else R.string.msg_alta_ko)
-                    )
-                }
-            },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(8.dp)
-                    .align(Alignment.BottomEnd)
-            )
+
         }
+        AlumnoMtoAcciones(onClickDelete = {
+            val ok = alumnosVM.baja()
+            if (ok) alumnosVM.resetDatos()
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    context.getString(if (ok) R.string.msg_baja_ok else R.string.msg_baja_ko)
+                )
+            }
+        }, onClickAdd = {
+            val ok = alumnosVM.alta()
+            if (ok) alumnosVM.resetDatos()
+            scope.launch {
+                snackbarHostState.showSnackbar(
+                    context.getString(if (ok) R.string.msg_alta_ok else R.string.msg_alta_ko)
+                )
+            }
+        },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .align(Alignment.BottomEnd)
+        )
     }
 }
 
