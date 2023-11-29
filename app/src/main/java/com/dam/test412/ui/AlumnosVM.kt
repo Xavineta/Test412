@@ -1,13 +1,13 @@
-package com.dam.test412.ui
+package com.dam.test421.ui
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.dam.test412.data.Alumno
-import com.dam.test412.data.AlumnoLogica
-import com.dam.test412.data.DataSource
-import com.dam.test412.data.Titulo
+import com.dam.test421.data.Alumno
+import com.dam.test421.data.AlumnoLogica
+import com.dam.test421.data.DataSource
+import com.dam.test421.data.Titulo
 
 class AlumnosVM : ViewModel() {
 

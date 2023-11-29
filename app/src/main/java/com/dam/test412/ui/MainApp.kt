@@ -1,10 +1,11 @@
-package com.dam.test412.ui
+package com.dam.test421.ui
 
 import android.app.Activity
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.MoreVert
@@ -20,7 +21,6 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -34,22 +34,45 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import com.dam.test412.R
-import com.dam.test412.data.DataSource
-import com.dam.test412.ui.theme.Test412Theme
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.dam.test421.R
+import com.dam.test421.ui.theme.Test421Theme
+
+
+@OptIn(ExperimentalMaterial3Api::class)
+
+enum class AppScreens(@StringRes val title: Int) {
+    Home(title = R.string.txt_appbar),
+    Bus(title = R.string.label_bus),
+    Mto(title = R.string.label_mto),
+}
 
 @Composable
 fun MainApp(
     modifier: Modifier = Modifier
 ) {
-
+    val navController: NavHostController = rememberNavController()
+    val backStackEntry by navController.currentBackStackEntryAsState()
+    val currentScreen = AppScreens.valueOf(
+        backStackEntry?.destination?.route ?: AppScreens.Home.name
+    )
     var optionSelected by rememberSaveable { mutableIntStateOf(0) }
-    val snackbarHostState=remember{SnackbarHostState()}
+    val snackbarHostState = remember { SnackbarHostState() }
+    val alumnosVM: AlumnosVM = viewModel()
 
     Scaffold(
         modifier = modifier,
         topBar = {
-            MainTopAppBar()
+            MainTopAppBar(
+                currentScreen = currentScreen,
+                canNavigateBack = navController.previousBackStackEntry != null,
+                navigateUp = { navController.navigateUp() }
+            )
         },
         bottomBar = {
             MainBottomAppBar(
@@ -57,55 +80,86 @@ fun MainApp(
                 onSelectedItemChange = { optionSelected = it }
             )
         },
-        snackbarHost = {SnackbarHost(hostState = snackbarHostState)}
-    ) {
-        Surface(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) }) {
+        NavHost(
+            navController = navController,
+            startDestination = AppScreens.Home.name,
             modifier = Modifier.padding(it)
         ) {
-            when (optionSelected) {
-                1 -> AlumnosBus(snackbarHostState=snackbarHostState)
-                2 -> AlumnosMto(snackbarHostState=snackbarHostState)
-                else -> HomeScreen()
+            composable(route = AppScreens.Home.name) {
+
+                HomeScreen(
+                    onNextButtonClick = {
+                        navController.navigate(AppScreens.Home.name)
+                    },
+                    alumnosVM = alumnosVM,
+                    snackbarHostState = snackbarHostState
+                )
+
+            }
+            composable(route = AppScreens.Bus.name) {
+                AlumnosBus(
+                    onNextButtonClick = {
+                        navController.navigate(AppScreens.Bus.name)
+                    },
+                    alumnosVM = alumnosVM, snackbarHostState = snackbarHostState
+                )
+            }
+            composable(route = AppScreens.Mto.name) {
+                AlumnosMto(alumnosVM = alumnosVM, snackbarHostState = snackbarHostState)
             }
         }
     }
 }
 
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MainTopAppBar(modifier: Modifier = Modifier) {
-
-
+fun MainTopAppBar(
+    currentScreen: AppScreens,
+    canNavigateBack: Boolean,
+    navigateUp: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     var showMenu by rememberSaveable {
         mutableStateOf(false)
     }
     var showDlgConfirmacion by rememberSaveable {
         mutableStateOf(false)
     }
-    val activity= (LocalContext.current as? Activity)
+    val activity = (LocalContext.current as? Activity)
     CenterAlignedTopAppBar(
-        title = { Text(text = stringResource(R.string.txt_appbar)) },
+        title = { Text(text = stringResource(currentScreen.title)) },
         modifier = modifier,
-        actions= {
-            IconButton(onClick = {
-                showMenu=!showMenu
-            }) {
-                Icon(imageVector = Icons.Filled.MoreVert, contentDescription =null )
+        navigationIcon = {
+            if (canNavigateBack) {
+                IconButton(onClick = navigateUp) {
+                    Icon(imageVector = Icons.Filled.ArrowBack, contentDescription = null)
+                }
             }
-            DropdownMenu(expanded = showMenu, onDismissRequest = {showMenu=false
+        },
+        actions = {
+            IconButton(onClick = {
+                showMenu = !showMenu
+            }) {
+                Icon(imageVector = Icons.Filled.MoreVert, contentDescription = null)
+            }
+            DropdownMenu(expanded = showMenu, onDismissRequest = {
+                showMenu = false
             }) {
                 DropdownMenuItem(
                     text = { Text(text = stringResource(R.string.menu_salir)) },
                     onClick = {
-                        showDlgConfirmacion=true
+                        showDlgConfirmacion = true
                     })
                 if (showDlgConfirmacion) {
-                    showMenu=false
+                    showMenu = false
                     DlgConfirmacion(
                         mensaje = R.string.txt_salir,
-                        onCancelarClick = { showDlgConfirmacion=false },
-                        onAceptarClick = { showDlgConfirmacion=false
-                         activity?.finish()
+                        onCancelarClick = { showDlgConfirmacion = false },
+                        onAceptarClick = {
+                            showDlgConfirmacion = false
+                            activity?.finish()
                         })
 
                 }
@@ -171,10 +225,11 @@ private fun DlgConfirmacion(
             }
         })
 }
+
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun MainAppPreview() {
-    Test412Theme {
+    Test421Theme {
         MainApp()
     }
 }

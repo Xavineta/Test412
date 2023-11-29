@@ -1,6 +1,7 @@
-package com.dam.test412.ui
+package com.dam.test421.ui
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -15,12 +16,11 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material3.Button
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
@@ -34,9 +34,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dam.test412.R
-import com.dam.test412.data.Titulo
-import com.dam.test412.ui.theme.Test412Theme
+import com.dam.test421.R
+import com.dam.test421.data.Titulo
+import com.dam.test421.ui.theme.Test421Theme
 import kotlinx.coroutines.launch
 
 @Composable
@@ -45,11 +45,11 @@ fun AlumnosMto(
     alumnosVM: AlumnosVM = viewModel(),
     snackbarHostState: SnackbarHostState = SnackbarHostState()
 ) {
-    val uiState = alumnosVM.uiState;
+    val uiState = alumnosVM.uiState
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
 
-    Surface(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .padding(8.dp)
@@ -106,7 +106,6 @@ fun AlumnosMto(
                     onClick = { alumnosVM.setTitulo(Titulo.DAM) })
                 Text(text = stringResource(R.string.txt_titulo_dam))
             }
-            Spacer(modifier = Modifier.weight(1f))
             AlumnoMtoAcciones(onClickDelete = {
                 val ok = alumnosVM.baja()
                 if (ok) alumnosVM.resetDatos()
@@ -127,6 +126,7 @@ fun AlumnosMto(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(8.dp)
+                    .align(Alignment.BottomEnd)
             )
         }
     }
@@ -139,16 +139,16 @@ fun AlumnoMtoAcciones(
 
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
-        verticalAlignment = Alignment.Bottom
+        horizontalArrangement = Arrangement.End,
     ) {
-        Button(
+        FloatingActionButton(
             onClick = onClickDelete, modifier = Modifier.width(120.dp)
         ) {
             //Text(text = stringResource(R.string.but_cancelar))
             Icon(imageVector = Icons.Default.Delete, contentDescription = null)
         }
-        Button(
+        Spacer(modifier = Modifier.width(8.dp))
+        FloatingActionButton(
             onClick = onClickAdd, modifier = Modifier.width(120.dp)
         ) {
             //Text(text = stringResource(R.string.but_aceptar))
@@ -160,7 +160,7 @@ fun AlumnoMtoAcciones(
 @Preview(showBackground = true)
 @Composable
 fun AlumnosMtoPreview() {
-    Test412Theme {
+    Test421Theme {
         AlumnosMto()
     }
 }

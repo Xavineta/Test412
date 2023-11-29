@@ -1,4 +1,4 @@
-package com.dam.test412.ui
+package com.dam.test421.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -14,15 +14,15 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Card
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -34,13 +34,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.dam.test412.R
-import com.dam.test412.data.Alumno
-import com.dam.test412.data.DataSource
-import com.dam.test412.data.DataSource.alumnos
-import com.dam.test412.ui.theme.Test412Theme
+import com.dam.test421.R
+import com.dam.test421.data.Alumno
+import com.dam.test421.data.DataSource.alumnos
+import com.dam.test421.ui.theme.Test421Theme
+
 @Composable
 fun AlumnosBus(
+    onNextButtonClick: () -> Unit,
     modifier: Modifier = Modifier,
     alumnosVM: AlumnosVM = viewModel(),
     snackbarHostState: SnackbarHostState = SnackbarHostState(),
@@ -48,7 +49,7 @@ fun AlumnosBus(
 
     val uiState = alumnosVM.uiState
 
-    Surface(
+    Box(
         modifier = modifier
             .fillMaxSize()
             .padding(4.dp)
@@ -64,6 +65,13 @@ fun AlumnosBus(
                         alumnosVM.setAlumnoSelected(if (uiState.alumnoSelected != index) index else -1)
                     })
             }
+        }
+        FloatingActionButton(
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.BottomEnd),
+            onClick = { onNextButtonClick() }) {
+            Icon(Icons.Filled.Send, contentDescription = null)
         }
     }
 }
@@ -113,7 +121,7 @@ fun AlumnoCard(
 @Preview(showBackground = true)
 @Composable
 fun AlumnosListaPreview() {
-    Test412Theme {
-        AlumnosBus()
+    Test421Theme {
+        AlumnosBus(onNextButtonClick = {})
     }
 }

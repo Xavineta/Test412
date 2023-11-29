@@ -1,6 +1,6 @@
-package com.dam.test412.ui
+package com.dam.test421.ui
 
-import com.dam.test412.data.Titulo
+import com.dam.test421.data.Titulo
 
 
 data class AlumnosState(
